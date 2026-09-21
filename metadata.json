@@ -1,0 +1,6 @@
+{
+  "name": "SecResearch Assessment Platform",
+  "description": "Security Research Engineer assessment platform featuring a 3-round testing suite (Theory MCQ, Real-world Code Review & Patching, Simulated Labs & CTF) with 35% pass rule, question-by-question reporting, and verified certificate generation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

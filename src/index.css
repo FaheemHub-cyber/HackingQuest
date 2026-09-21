@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "SF Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: #f5f5f7;
+  color: #0f172a; /* Deep dark slate-900 for high-contrast crisp legibility */
+  margin: 0;
+  padding: 0;
+  font-weight: 450;
+}
+
+/* Ensure rich, dark, high-contrast typography across elements */
+h1, h2, h3, h4, h5, h6 {
+  color: #0f172a;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+p, span, label, td, th {
+  color: inherit;
+}
+
+input, select, textarea {
+  color: #0f172a;
+}
+
+/* Apple-style custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(15, 23, 42, 0.35);
+}
+
+@media print {
+  /* Force exact background colors and graphics */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide navigation, interactive actions, and utility elements when printing or saving as PDF */
+  nav,
+  header,
+  .no-print,
+  button,
+  input,
+  textarea,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Prevent awkward page cutoffs */
+  .print-break-inside-avoid,
+  .certificate-container {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  @page {
+    margin: 1cm;
+    size: A4 portrait;
+  }
+}

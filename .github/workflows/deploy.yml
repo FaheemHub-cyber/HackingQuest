@@ -1,0 +1,53 @@
+name: Build and Deploy to GitHub Pages (page branch)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# Grant GITHUB_TOKEN the permissions required to make a Pages deployment and push to branches
+permissions:
+  contents: write
+
+# Allow one concurrent deployment
+concurrency:
+  group: 'pages-deploy'
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies with Bun
+        run: |
+          if [ -f "bun.lock" ] || [ -f "bun.lockb" ]; then
+            bun install --frozen-lockfile
+          else
+            bun install
+          fi
+
+      - name: Build static production files
+        run: bun run build
+
+      - name: Ensure .nojekyll exists in dist
+        run: touch dist/.nojekyll
+
+      - name: Deploy static artifacts to 'page' branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: page
+          commit_message: "Deploy production build to page branch [skip ci]"
