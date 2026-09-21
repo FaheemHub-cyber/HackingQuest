@@ -670,7 +670,7 @@ const ROUND3_CHALLENGES = [
     category: 'Web XSS',
     desc: 'The simulated web application below reflects unsanitized comments into the page DOM. Inject an interactive payload that executes alert(1).',
     type: 'xss_sandbox',
-    flag: '<script>alert(1)<\\/script>',
+    flag: '<script>alert(1)<\/script>',
     hint: 'Consider script execution tags or event-based DOM vectors (such as onerror on an image or SVG) that trigger an alert dialog.',
     hints: [
       'Vulnerability Sink: The application directly reflects comments into the DOM without sanitization, allowing HTML and script tags to be parsed.',
