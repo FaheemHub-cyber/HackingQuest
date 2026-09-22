@@ -12,6 +12,9 @@ export const CandidateRegister: React.FC<CandidateRegisterProps> = ({ onStart })
   const [organization, setOrganization] = useState('');
   const [track, setTrack] = useState<AssessmentTrack>('Web Application Security');
   const [error, setError] = useState('');
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [proctorError, setProctorError] = useState('');
 
   const tracks: AssessmentTrack[] = [
     'Web Application Security',
@@ -22,11 +25,18 @@ export const CandidateRegister: React.FC<CandidateRegisterProps> = ({ onStart })
   ];
 
   const handleFillSample = () => {
-    setName('Aditi Sharma');
-    setEmail('aditi.sharma@example.edu');
-    setOrganization('IIT Bombay / Cyber Lab');
-    setTrack('Web Application Security');
-    setError('');
+    if (passwordInput === '123456') {
+      setProctorError('');
+      setName('Aditi Sharma');
+      setEmail('aditi.sharma@example.edu');
+      setOrganization('IIT Bombay / Cyber Lab');
+      setTrack('Web Application Security');
+      setError('');
+      setShowPasswordPrompt(false);
+      setPasswordInput('');
+    } else {
+      setProctorError('Incorrect password.');
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -78,13 +88,51 @@ export const CandidateRegister: React.FC<CandidateRegisterProps> = ({ onStart })
                 A score of at least <strong className="text-emerald-700 font-bold">35% in each independent round</strong> is required to qualify for the formal Security Research Engineer Certificate.
               </p>
             </div>
-            <button
-              type="button"
-              onClick={handleFillSample}
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-100 hover:border-slate-400 active:scale-[0.98]"
-            >
-              <Sparkles className="h-3.5 w-3.5 text-[#0071e3]" /> Auto-fill Sample Candidate
-            </button>
+            {showPasswordPrompt ? (
+              <div className="flex flex-col gap-2 items-end">
+                <input
+                  type="password"
+                  className="rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800"
+                  placeholder="Enter password"
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleFillSample();
+                    }
+                  }}
+                />
+                {proctorError && <p className="text-red-500 text-xs">{proctorError}</p>}
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleFillSample}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-blue-300 bg-blue-50 px-3.5 py-2 text-xs font-semibold text-[#0071e3] transition hover:bg-blue-100 active:scale-[0.98]"
+                  >
+                    Submit
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowPasswordPrompt(false);
+                      setPasswordInput('');
+                      setProctorError('');
+                    }}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-100 hover:border-slate-400 active:scale-[0.98]"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setShowPasswordPrompt(true)}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-100 hover:border-slate-400 active:scale-[0.98]"
+              >
+                <Sparkles className="h-3.5 w-3.5 text-[#0071e3]" /> Auto-fill Sample Candidate
+              </button>
+            )}
           </div>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-5">

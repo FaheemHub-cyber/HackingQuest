@@ -34,6 +34,9 @@ export const Round3Labs: React.FC<Round3LabsProps> = ({
   const [feedback, setFeedback] = useState<Record<string, string>>({});
   const [activeTab, setActiveTab] = useState<'terminal' | 'sandboxes' | 'challenges'>('sandboxes');
   const [showHint, setShowHint] = useState<Record<string, boolean>>({});
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [proctorError, setProctorError] = useState('');
 
   // ---------------- TERMINAL SIMULATOR STATE ----------------
   const [termHistory, setTermHistory] = useState<string[]>([
@@ -422,26 +425,33 @@ export const Round3Labs: React.FC<Round3LabsProps> = ({
 
   // ---------------- PROCTOR QUICK-FILL ----------------
   const handleProctorFill = () => {
-    const solvedFlags: Record<string, boolean> = {};
-    const filledSubmissions: Record<string, string> = {};
-    const feedbackMap: Record<string, string> = {};
+    if (passwordInput === '123456') {
+      setProctorError('');
+      const solvedFlags: Record<string, boolean> = {};
+      const filledSubmissions: Record<string, string> = {};
+      const feedbackMap: Record<string, string> = {};
 
-    challenges.forEach((c, idx) => {
-      // solve 8/10 for 80% passing preview
-      if (idx < 8) {
-        solvedFlags[c.id] = true;
-        filledSubmissions[c.id] = c.flag;
-        feedbackMap[c.id] = '✔ Verified by Proctor';
-      } else {
-        solvedFlags[c.id] = false;
-        filledSubmissions[c.id] = 'unverified_attempt';
-        feedbackMap[c.id] = '✘ Not quite. Try again.';
-      }
-    });
+      challenges.forEach((c, idx) => {
+        // solve 8/10 for 80% passing preview
+        if (idx < 8) {
+          solvedFlags[c.id] = true;
+          filledSubmissions[c.id] = c.flag;
+          feedbackMap[c.id] = '✔ Verified by Proctor';
+        } else {
+          solvedFlags[c.id] = false;
+          filledSubmissions[c.id] = 'unverified_attempt';
+          feedbackMap[c.id] = '✘ Not quite. Try again.';
+        }
+      });
 
-    setFlags(solvedFlags);
-    setSubmissions(filledSubmissions);
-    setFeedback(feedbackMap);
+      setFlags(solvedFlags);
+      setSubmissions(filledSubmissions);
+      setFeedback(feedbackMap);
+      setShowPasswordPrompt(false);
+      setPasswordInput('');
+    } else {
+      setProctorError('Incorrect password.');
+    }
   };
 
   const solvedCount = Object.values(flags).filter(Boolean).length;
@@ -471,14 +481,52 @@ export const Round3Labs: React.FC<Round3LabsProps> = ({
             </span>
           </div>
 
-          <button
-            type="button"
-            onClick={handleProctorFill}
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-100 hover:border-slate-400 active:scale-[0.98]"
-          >
-            <Sparkles className="h-3.5 w-3.5 text-[#0071e3]" />
-            <span className="hidden sm:inline">Proctor Fill</span>
-          </button>
+          {showPasswordPrompt ? (
+            <div className="flex flex-col gap-2 items-end">
+              <input
+                type="password"
+                className="rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800"
+                placeholder="Enter password"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleProctorFill();
+                  }
+                }}
+              />
+              {proctorError && <p className="text-red-500 text-xs">{proctorError}</p>}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleProctorFill}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-blue-300 bg-blue-50 px-3.5 py-2 text-xs font-semibold text-[#0071e3] transition hover:bg-blue-100 active:scale-[0.98]"
+                >
+                  Submit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPasswordPrompt(false);
+                    setPasswordInput('');
+                    setProctorError('');
+                  }}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-100 hover:border-slate-400 active:scale-[0.98]"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowPasswordPrompt(true)}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-100 hover:border-slate-400 active:scale-[0.98]"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-[#0071e3]" />
+              <span className="hidden sm:inline">Proctor Fill</span>
+            </button>
+          )}
         </div>
       </div>
 

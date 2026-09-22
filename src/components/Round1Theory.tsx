@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { HelpCircle, CheckCircle, ArrowRight, Sparkles, Filter } from 'lucide-react';
 import { MCQQuestion } from '../types';
+import { ROUND1_QUESTIONS } from '../data/round1Questions';
 
 interface Round1TheoryProps {
   questions: MCQQuestion[];
@@ -16,6 +17,9 @@ export const Round1Theory: React.FC<Round1TheoryProps> = ({
   const [answers, setAnswers] = useState<Record<number, number>>(initialAnswers);
   const [activeFilter, setActiveFilter] = useState<string>('All');
   const [confirmSubmitOpen, setConfirmSubmitOpen] = useState(false);
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [proctorError, setProctorError] = useState('');
 
   const handleSelectOption = (qId: number, optionIdx: number) => {
     setAnswers((prev) => ({
@@ -33,22 +37,28 @@ export const Round1Theory: React.FC<Round1TheoryProps> = ({
   const answeredCount = Object.keys(answers).length;
   const isPassingCandidate = answeredCount >= 7; // 35% of 20 = 7
 
-  const handleDemoFill = () => {
-    // Fill 16/20 correct (80%) for realistic passing demonstration
-    const demoAnswers: Record<number, number> = {};
-    questions.forEach((q, idx) => {
-      // make most correct, a couple wrong to show detailed wrong-question analysis in the report
-      if (idx === 2 || idx === 8 || idx === 14) {
-        demoAnswers[q.id] = (q.correctAnswer + 1) % q.options.length;
-      } else {
-        demoAnswers[q.id] = q.correctAnswer;
-      }
-    });
-    setAnswers(demoAnswers);
-  };
-
   const executeSubmit = () => {
     onSubmit(answers, 0);
+  };
+
+  const handleProctorFill = () => {
+    if (passwordInput === '123456') {
+      setProctorError('');
+      const demoAnswers: Record<number, number> = {};
+      ROUND1_QUESTIONS.forEach((q, idx) => {
+        // make most correct, a couple wrong to show detailed wrong-question analysis in the report
+        if (idx === 2 || idx === 8 || idx === 14) {
+          demoAnswers[q.id] = (q.correctAnswer + 1) % q.options.length;
+        } else {
+          demoAnswers[q.id] = q.correctAnswer;
+        }
+      });
+      setAnswers(demoAnswers);
+      setShowPasswordPrompt(false);
+      setPasswordInput('');
+    } else {
+      setProctorError('Incorrect password. Please try again.');
+    }
   };
 
   return (
@@ -76,16 +86,54 @@ export const Round1Theory: React.FC<Round1TheoryProps> = ({
             </span>
           </div>
 
-          {/* Quick Demo Fill */}
-          <button
-            type="button"
-            onClick={handleDemoFill}
-            title="Auto-fill passing answers for evaluation convenience"
-            className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-100 hover:border-slate-400 active:scale-[0.98]"
-          >
-            <Sparkles className="h-3.5 w-3.5 text-[#0071e3]" />
-            <span className="hidden sm:inline">Proctor Fill</span>
-          </button>
+          {/* Quick Demo Fill - Proctor Protected */}
+          {showPasswordPrompt ? (
+            <div className="flex flex-col gap-2 items-end">
+              <input
+                type="password"
+                className="rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800"
+                placeholder="Enter password"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleProctorFill();
+                  }
+                }}
+              />
+              {proctorError && <p className="text-red-500 text-xs">{proctorError}</p>}
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleProctorFill}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-blue-300 bg-blue-50 px-3.5 py-2 text-xs font-semibold text-[#0071e3] transition hover:bg-blue-100 active:scale-[0.98]"
+                >
+                  Submit
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPasswordPrompt(false);
+                    setPasswordInput('');
+                    setProctorError('');
+                  }}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-100 hover:border-slate-400 active:scale-[0.98]"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowPasswordPrompt(true)}
+              title="Auto-fill passing answers for evaluation convenience"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-100 hover:border-slate-400 active:scale-[0.98]"
+            >
+              <Sparkles className="h-3.5 w-3.5 text-[#0071e3]" />
+              <span className="hidden sm:inline">Proctor Fill</span>
+            </button>
+          )}
         </div>
       </div>
 
