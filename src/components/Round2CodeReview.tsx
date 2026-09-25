@@ -75,9 +75,9 @@ export const Round2CodeReview: React.FC<Round2CodeReviewProps> = ({
     if (passwordInput === '123456') {
       setProctorError('');
       const filled: Record<number, number> = {};
-      questions.forEach((q, idx) => {
-        // Set correct answer for first 11 questions, mix for others
-        filled[q.id] = idx < 12 ? q.correctAnswer : (q.correctAnswer + 1) % q.options.length;
+      questions.forEach((q) => {
+        // Fill 100% correct answers for all questions
+        filled[q.id] = q.correctAnswer;
       });
       setAnswers(filled);
       setShowPasswordPrompt(false);

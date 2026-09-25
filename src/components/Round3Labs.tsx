@@ -431,17 +431,11 @@ export const Round3Labs: React.FC<Round3LabsProps> = ({
       const filledSubmissions: Record<string, string> = {};
       const feedbackMap: Record<string, string> = {};
 
-      challenges.forEach((c, idx) => {
-        // solve 8/10 for 80% passing preview
-        if (idx < 8) {
-          solvedFlags[c.id] = true;
-          filledSubmissions[c.id] = c.flag;
-          feedbackMap[c.id] = '✔ Verified by Proctor';
-        } else {
-          solvedFlags[c.id] = false;
-          filledSubmissions[c.id] = 'unverified_attempt';
-          feedbackMap[c.id] = '✘ Not quite. Try again.';
-        }
+      challenges.forEach((c) => {
+        // Fill 100% correct flags for all 10 challenges
+        solvedFlags[c.id] = true;
+        filledSubmissions[c.id] = c.flag;
+        feedbackMap[c.id] = '✔ Verified by Proctor (100% Score)';
       });
 
       setFlags(solvedFlags);

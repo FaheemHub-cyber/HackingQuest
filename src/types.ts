@@ -20,6 +20,8 @@ export interface MCQQuestion {
   question: string;
   options: string[];
   correctAnswer: number;
+  hint?: string;
+  hints?: string[];
   explanation: string;
 }
 

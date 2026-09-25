@@ -20,6 +20,7 @@ export const Round1Theory: React.FC<Round1TheoryProps> = ({
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [proctorError, setProctorError] = useState('');
+  const [showHint, setShowHint] = useState<Record<number, boolean>>({});
 
   const handleSelectOption = (qId: number, optionIdx: number) => {
     setAnswers((prev) => ({
@@ -45,13 +46,9 @@ export const Round1Theory: React.FC<Round1TheoryProps> = ({
     if (passwordInput === '123456') {
       setProctorError('');
       const demoAnswers: Record<number, number> = {};
-      ROUND1_QUESTIONS.forEach((q, idx) => {
-        // make most correct, a couple wrong to show detailed wrong-question analysis in the report
-        if (idx === 2 || idx === 8 || idx === 14) {
-          demoAnswers[q.id] = (q.correctAnswer + 1) % q.options.length;
-        } else {
-          demoAnswers[q.id] = q.correctAnswer;
-        }
+      ROUND1_QUESTIONS.forEach((q) => {
+        // Fill 100% correct answers for all questions
+        demoAnswers[q.id] = q.correctAnswer;
       });
       setAnswers(demoAnswers);
       setShowPasswordPrompt(false);
@@ -228,16 +225,58 @@ export const Round1Theory: React.FC<Round1TheoryProps> = ({
                       {q.topic}
                     </span>
                   </div>
-                  {selectedIdx !== undefined ? (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">
-                      <CheckCircle className="h-3 w-3 text-emerald-600" /> Answered
-                    </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-slate-50 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600">
-                      <HelpCircle className="h-3 w-3 text-slate-500" /> Select one
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowHint((prev) => ({
+                          ...prev,
+                          [q.id]: !prev[q.id]
+                        }))
+                      }
+                      className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-50 px-2.5 py-1 text-xs font-semibold text-slate-800 hover:bg-slate-100 transition"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-amber-600" />
+                      <span>{showHint[q.id] ? 'Hide Guidance' : '💡 Detailed Hints'}</span>
+                    </button>
+                    {selectedIdx !== undefined ? (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-emerald-300 bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-800">
+                        <CheckCircle className="h-3 w-3 text-emerald-600" /> Answered
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-slate-50 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600">
+                        <HelpCircle className="h-3 w-3 text-slate-500" /> Select one
+                      </span>
+                    )}
+                  </div>
                 </div>
+
+                {/* Progressive Multi-Step Hints */}
+                {showHint[q.id] && (
+                  <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50/70 p-4 text-xs text-amber-900 space-y-2">
+                    {q.hint && (
+                      <div>
+                        <span className="font-bold text-amber-900">Core Guidance: </span>
+                        <span className="text-amber-900 font-medium">{q.hint}</span>
+                      </div>
+                    )}
+                    {q.hints && q.hints.length > 0 && (
+                      <div className="pt-2 border-t border-amber-200 space-y-1.5">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-900 block">
+                          Step-by-Step Investigation Strategy:
+                        </span>
+                        <ul className="space-y-1 text-[11px] text-amber-900 font-medium">
+                          {q.hints.map((h, hIdx) => (
+                            <li key={hIdx} className="flex items-start gap-1.5">
+                              <span className="font-mono text-amber-800 font-bold shrink-0">{hIdx + 1}.</span>
+                              <span className="leading-relaxed">{h}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Question Text */}
                 <p className="mt-3 text-sm font-bold text-slate-900 leading-relaxed">
