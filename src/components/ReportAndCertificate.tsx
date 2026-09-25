@@ -51,6 +51,7 @@ export const ReportAndCertificate: React.FC<ReportAndCertificateProps> = ({
   const [isExportingCertPDF, setIsExportingCertPDF] = useState(false);
   const [isExportingReportPDF, setIsExportingReportPDF] = useState(false);
   const certificateRef = useRef<HTMLDivElement>(null);
+  const hasAutoDownloadedRef = useRef(false);
 
   // ---------------- SCORING CALCULATIONS ----------------
   // Round 1
@@ -82,6 +83,52 @@ export const ReportAndCertificate: React.FC<ReportAndCertificateProps> = ({
   const allPassed = r1Passed && r2Passed && r3Passed;
   const aggregatePercent = Math.round((r1ScorePercent + r2ScorePercent + r3ScorePercent) / 3);
 
+  // Automatically download the result PDF when the test report finishes
+  React.useEffect(() => {
+    if (!hasAutoDownloadedRef.current) {
+      hasAutoDownloadedRef.current = true;
+      try {
+        generateAuditReportPDF({
+          candidate,
+          r1Questions,
+          r1Answers,
+          r1ScorePercent,
+          r1TimeSpent,
+          r2Questions,
+          r2Answers,
+          r2ScorePercent,
+          r2TimeSpent,
+          r3Challenges,
+          r3Flags,
+          r3Submissions,
+          r3ScorePercent,
+          r3TimeSpent,
+          allPassed,
+          aggregatePercent
+        });
+      } catch (error) {
+        console.error('Auto-download PDF failed:', error);
+      }
+    }
+  }, [
+    candidate,
+    r1Questions,
+    r1Answers,
+    r1ScorePercent,
+    r1TimeSpent,
+    r2Questions,
+    r2Answers,
+    r2ScorePercent,
+    r2TimeSpent,
+    r3Challenges,
+    r3Flags,
+    r3Submissions,
+    r3ScorePercent,
+    r3TimeSpent,
+    allPassed,
+    aggregatePercent
+  ]);
+
   const formatSeconds = (totalSeconds: number) => {
     const m = Math.floor(totalSeconds / 60);
     const s = totalSeconds % 60;
@@ -99,7 +146,7 @@ export const ReportAndCertificate: React.FC<ReportAndCertificateProps> = ({
       const safeName = candidate.name.replace(/[^a-zA-Z0-9_-]/g, '_');
       await downloadElementAsPDF(
         certificateRef.current,
-        `SecResearch_Certificate_${safeName}.pdf`,
+        `Hubstream_Security_Interview_Certificate_${safeName}.pdf`,
         'landscape'
       );
     } catch (error) {
@@ -139,7 +186,7 @@ export const ReportAndCertificate: React.FC<ReportAndCertificateProps> = ({
 
   const handleExportText = () => {
     let report = `=======================================================\n`;
-    report += `SECRESEARCH ENGINEER ASSESSMENT REPORT & AUDIT LOG\n`;
+    report += `HUBSTREAM SECURITY INTERVIEW TEST REPORT\n`;
     report += `=======================================================\n\n`;
     report += `Candidate Name:  ${candidate.name}\n`;
     report += `Email:           ${candidate.email}\n`;
@@ -190,13 +237,13 @@ export const ReportAndCertificate: React.FC<ReportAndCertificateProps> = ({
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `SecResearch_Assessment_${candidate.name.replace(/\s+/g, '_')}_Report.txt`;
+    link.download = `Hubstream_Security_Interview_Test_${candidate.name.replace(/\s+/g, '_')}_Report.txt`;
     link.click();
     URL.revokeObjectURL(url);
   };
 
   const handleExportAnswersMarkdown = () => {
-    let md = `# SecResearch Engineer Assessment — Complete Solution Key & Candidate Answers\n\n`;
+    let md = `# Hubstream Security Interview Test — Complete Solution Key & Candidate Answers\n\n`;
     md += `**Candidate Name**: ${candidate.name}\n`;
     md += `**Candidate Email**: ${candidate.email}\n`;
     md += `**Organization**: ${candidate.organization}\n`;
@@ -277,7 +324,7 @@ export const ReportAndCertificate: React.FC<ReportAndCertificateProps> = ({
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `SecResearch_All_Answers_${candidate.name.replace(/\s+/g, '_')}.md`;
+    link.download = `Hubstream_Security_Interview_Test_Answers_${candidate.name.replace(/\s+/g, '_')}.md`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -519,11 +566,11 @@ export const ReportAndCertificate: React.FC<ReportAndCertificateProps> = ({
             </div>
 
             <div className="mt-3 text-xs uppercase tracking-widest font-black text-amber-900">
-              Official Digital Credential · SecResearch Board of Examiners
+              Official Digital Credential · Hubstream Security Board
             </div>
 
             <h1 className="mt-3 text-2xl sm:text-4xl font-black tracking-tight text-slate-950 uppercase font-serif">
-              Certificate of Technical Competency
+              Hubstream Security Interview Test Certificate
             </h1>
 
             <div className="my-6 flex items-center justify-center gap-4">
@@ -584,7 +631,7 @@ export const ReportAndCertificate: React.FC<ReportAndCertificateProps> = ({
 
               <div className="text-right">
                 <span className="block text-[11px] text-slate-600 font-bold uppercase">Authorized Proctor</span>
-                <span className="font-bold text-emerald-800">SecResearch Academic Board</span>
+                <span className="font-bold text-emerald-800">Hubstream Security Board</span>
               </div>
             </div>
           </div>

@@ -40,8 +40,8 @@ export const Round3Labs: React.FC<Round3LabsProps> = ({
 
   // ---------------- TERMINAL SIMULATOR STATE ----------------
   const [termHistory, setTermHistory] = useState<string[]>([
-    'SecResearch Linux Kernel 6.8.0-45-generic #48-Ubuntu SMP',
-    'Welcome to SecResearch Virtual Sandbox v2.4 (x86_64-pc-linux-gnu)',
+    'Hubstream Security Linux Kernel 6.8.0-45-generic #48-Ubuntu SMP',
+    'Welcome to Hubstream Security Virtual Sandbox v2.4 (x86_64-pc-linux-gnu)',
     'Type "help" for a list of commands. Type "clear" to wipe terminal.',
     ''
   ]);
