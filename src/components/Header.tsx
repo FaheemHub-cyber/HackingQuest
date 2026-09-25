@@ -28,14 +28,14 @@ export const Header: React.FC<HeaderProps> = ({ currentStep, candidate, onNaviga
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-lg font-bold tracking-tight text-slate-900 sm:text-xl">
-                SecResearch Platform
+                Hubstream Security Interview Test
               </h1>
               <span className="rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-800">
                 v2.4
               </span>
             </div>
             <p className="text-xs text-slate-700 font-medium">
-              Security Research Engineer — Fresher & Intern Evaluation Suite
+              Hubstream Security Interview Test — Technical Assessment Suite
             </p>
           </div>
         </div>

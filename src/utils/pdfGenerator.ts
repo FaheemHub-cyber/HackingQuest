@@ -117,7 +117,7 @@ export function generateAuditReportPDF(data: {
   const drawHeaderFooter = () => {
     pdf.setFontSize(8);
     pdf.setTextColor(140, 150, 170);
-    pdf.text('SecResearch Board of Examiners · Official Audit Report', margin, 24);
+    pdf.text('Hubstream Security Interview Test · Official Audit Report', margin, 24);
     pdf.text(`Candidate ID: ${candidate.id}`, pageWidth - margin, 24, { align: 'right' });
     pdf.setDrawColor(220, 225, 235);
     pdf.line(margin, 28, pageWidth - margin, 28);
@@ -130,11 +130,11 @@ export function generateAuditReportPDF(data: {
   pdf.setFontSize(18);
   pdf.setTextColor(255, 255, 255);
   pdf.setFont('helvetica', 'bold');
-  pdf.text('SECRESEARCH ENGINEER ASSESSMENT', margin, 42);
+  pdf.text('HUBSTREAM SECURITY INTERVIEW TEST', margin, 42);
 
   pdf.setFontSize(10);
   pdf.setTextColor(56, 189, 248); // Cyan 400
-  pdf.text('Comprehensive Technical Competency & Audit Diagnostic Log', margin, 60);
+  pdf.text('Hubstream Security Interview Test Results & Candidate Report', margin, 60);
 
   pdf.setFontSize(9);
   pdf.setTextColor(148, 163, 184); // Slate 400
@@ -354,5 +354,5 @@ export function generateAuditReportPDF(data: {
   });
 
   const safeName = candidate.name.replace(/[^a-zA-Z0-9_-]/g, '_');
-  pdf.save(`SecResearch_Audit_Report_${safeName}.pdf`);
+  pdf.save(`Hubstream_Security_Interview_Test_Report_${safeName}.pdf`);
 }

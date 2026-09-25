@@ -78,14 +78,14 @@ export const CandidateRegister: React.FC<CandidateRegisterProps> = ({ onStart })
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-100 pb-5">
             <div>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200/80 bg-blue-50 px-3 py-1 text-xs font-semibold text-[#0071e3]">
-                <ShieldCheck className="h-3.5 w-3.5" /> Fresher & Intern Qualification Exam
+                <ShieldCheck className="h-3.5 w-3.5" /> Hubstream Security Interview Test
               </span>
               <h2 className="mt-2 text-2xl font-bold text-slate-900 tracking-tight">
-                Candidate Enrollment & Verification
+                Hubstream Security Interview Test — Registration
               </h2>
               <p className="mt-1 text-sm text-slate-700 font-medium max-w-2xl leading-relaxed">
-                Please register candidate credentials. The assessment consists of 3 continuous rounds.
-                A score of at least <strong className="text-emerald-700 font-bold">35% in each independent round</strong> is required to qualify for the formal Security Research Engineer Certificate.
+                Please enter candidate details to start the test. The test has 3 simple rounds.
+                A score of at least <strong className="text-emerald-700 font-bold">35% in each round</strong> is required to pass and get your certificate.
               </p>
             </div>
             {showPasswordPrompt ? (
@@ -228,12 +228,12 @@ export const CandidateRegister: React.FC<CandidateRegisterProps> = ({ onStart })
                 Round 1 · Theory
               </span>
             </div>
-            <h4 className="mt-3 font-bold text-slate-900">Theory MCQ Assessment</h4>
+            <h4 className="mt-3 font-bold text-slate-900">Round 1: Theory Questions</h4>
             <p className="mt-1 text-xs text-slate-700 leading-relaxed font-medium">
-              20 questions covering Pentesting, AI + SOC, Threat Modeling (STRIDE/DREAD), Cloud IAM, Automation, OSINT & Zero Trust.
+              20 simple multiple choice questions on web security, cloud, and penetration testing basics.
             </p>
             <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
-              <span className="text-slate-700 font-semibold">Pass Threshold:</span>
+              <span className="text-slate-700 font-semibold">Passing Score:</span>
               <span className="font-bold text-emerald-700">≥ 35% (7 / 20 correct)</span>
             </div>
           </div>
@@ -248,12 +248,12 @@ export const CandidateRegister: React.FC<CandidateRegisterProps> = ({ onStart })
                 Round 2 · Code Review
               </span>
             </div>
-            <h4 className="mt-3 font-bold text-slate-900">Code Review & Vulnerability MCQ</h4>
+            <h4 className="mt-3 font-bold text-slate-900">Round 2: Code Review</h4>
             <p className="mt-1 text-xs text-slate-700 leading-relaxed font-medium">
-              15 real-world code analysis MCQs focused exclusively on SQL, JavaScript, and C# vulnerabilities (Stored Procedure SQLi, Node.js Prototype Pollution, .NET Insecure Deserialization, SSRF, Command Injection, ReDoS, XXE, Mass Assignment, Path Traversal, and Cryptographic Weaknesses).
+              15 questions analyzing security bugs in easy SQL, JavaScript, and C# code snippets.
             </p>
             <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
-              <span className="text-slate-700 font-semibold">Pass Threshold:</span>
+              <span className="text-slate-700 font-semibold">Passing Score:</span>
               <span className="font-bold text-emerald-700">≥ 35% (6 / 15 correct)</span>
             </div>
           </div>
@@ -265,15 +265,15 @@ export const CandidateRegister: React.FC<CandidateRegisterProps> = ({ onStart })
                 <Terminal className="h-5 w-5" />
               </div>
               <span className="rounded-full border border-purple-100 bg-purple-50 px-2.5 py-0.5 text-xs font-bold text-purple-800">
-                Round 3 · Labs & CTF
+                Round 3 · Practical Labs
               </span>
             </div>
-            <h4 className="mt-3 font-bold text-slate-900">Simulated Labs & CTF</h4>
+            <h4 className="mt-3 font-bold text-slate-900">Round 3: Hands-On Labs</h4>
             <p className="mt-1 text-xs text-slate-700 leading-relaxed font-medium">
-              Interactive simulated Linux shell + 10 CTF challenges including XSS sandbox, SQLi bypass, Gandalf AI prompt injection, and JWT alg=none.
+              10 simple security tasks including XSS, SQL injection, AI prompt injection, and Linux shell commands.
             </p>
             <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
-              <span className="text-slate-700 font-semibold">Pass Threshold:</span>
+              <span className="text-slate-700 font-semibold">Passing Score:</span>
               <span className="font-bold text-emerald-700">≥ 35% (4 / 10 flags)</span>
             </div>
           </div>
@@ -285,8 +285,8 @@ export const CandidateRegister: React.FC<CandidateRegisterProps> = ({ onStart })
         <div className="flex items-start gap-3">
           <Award className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
           <div className="text-xs text-slate-700 leading-relaxed">
-            <strong className="text-emerald-800 font-semibold">Automated Certification & Question-by-Question Audit:</strong>{' '}
-            Upon completing Round 3, the platform compiles a full diagnostic report displaying which specific questions were correct and which were wrong, comparing candidate inputs against industry model answers. The verified Certificate is only issued if all three rounds individually achieve ≥ 35%.
+            <strong className="text-emerald-800 font-semibold">Automated Results & Certificate:</strong>{' '}
+            When you complete Round 3, your result PDF will be downloaded automatically. You can view all correct answers, explanations, and your official Hubstream Security certificate.
           </div>
         </div>
       </div>
